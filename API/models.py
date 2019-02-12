@@ -50,7 +50,7 @@ class Category(Model):
 class Tag(Model):
     name = CharField(max_length=NAME_MAX_LENGTH)
     persianName = CharField(max_length=NAME_MAX_LENGTH)
-    relatedTags = ManyToManyField(to="Tag", db_index=True)
+    relatedTags = ManyToManyField(to="Tag", blank=True, db_index=True)
 
     def __str__(self):
         return self.name
@@ -68,8 +68,9 @@ class Article(Model):
     isPersian = BooleanField()
     author = ForeignKey(to="Author", null=False, blank=False, on_delete=CASCADE, db_index=True)
     category = ForeignKey(to="Category", null=False, blank=False, on_delete=CASCADE, db_index=True)
-    tags = ManyToManyField(to="Tag", related_name="articles", related_query_name="article", null=True, blank=True,
+    tags = ManyToManyField(to="Tag", related_name="articles", related_query_name="article", blank=True,
                            db_index=True)
+    isBanner = BooleanField(default=False)
 
 
 class ArticlePart(Model):
@@ -83,3 +84,12 @@ class ArticlePart(Model):
     image = ImageField(upload_to=uploadLocation, null=True, blank=True, default=None)
     content = RichTextField(null=True, blank=True, default=None)
     article = ForeignKey(to="Article", on_delete=CASCADE, db_index=True)
+
+
+class Configs(Model):
+    monencoWebsite = CharField(max_length=NAME_MAX_LENGTH)
+    monencoWebsiteTitle = CharField(max_length=NAME_MAX_LENGTH)
+    persianMonencoWebsiteTitle = CharField(max_length=NAME_MAX_LENGTH)
+    minCategorySelectCount = IntegerField()
+    shareFooter = TextField(default=None, blank=True, null=True)
+    persianShareFooter = TextField(default=None, blank=True, null=True)

@@ -7,3 +7,5 @@ admin.site.register(Category)
 admin.site.register(Tag)
 admin.site.register(Article)
 admin.site.register(ArticlePart)
+admin.site.register(Configs)
+

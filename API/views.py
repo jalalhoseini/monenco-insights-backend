@@ -10,26 +10,32 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Q
-from API.serializers import (UserRegisterSerializer, LoginSerializer, RefreshTokenSerializer, CategorySerializer,
-                             IDSetSerializer, ArticleLeadSerializer, ArticleSerializer, IDSerializer, LogoutSerializer)
+from API.serializers import (UserRegisterSerializer,
+                             LoginSerializer,
+                             RefreshTokenSerializer,
+                             LogoutSerializer,
+                             ConfigsSerializer,
+                             ToggleSetSerializer,
+                             ArticleCompactSerializer,
+                             ArticleSerializer,
+                             ToggleSerializer,
+                             )
 from django.contrib.auth.models import User
-from API.models import (Client, Category, Article)
+from API.models import (Client, Category, Article, Configs)
 
 
+# Fully OK
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        print(request.data)
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             dataDictionary = serializer.validated_data
-            print(dataDictionary)
             username = dataDictionary['username']
             password = dataDictionary['password']
             email = dataDictionary['email']
             data = dict()
-
             if User.objects.filter(username=username).exists():
                 data['message'] = "client exists"
                 return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
@@ -47,14 +53,15 @@ class RegisterView(APIView):
             result = requests.post(url, data=tokenData)
             if result.status_code != 200:
                 user.delete()
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                data['message'] = "unexpected error"
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             Client.objects.create(user=user)
             return Response(result.json(), status=status.HTTP_200_OK)
         else:
-            print(serializer.errors)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# Fully OK
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
@@ -69,12 +76,15 @@ class LoginView(APIView):
             url = absolute_url + "o/auth/token/"
             result = requests.post(url, data=serializer.data)
             if result.status_code != 200:
+                data = dict()
+                data['message'] = "invalid username or password"
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             return Response(result.json(), status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+# Fully OK
 class RefreshTokenView(APIView):
     permission_classes = [AllowAny]
 
@@ -95,10 +105,16 @@ class RefreshTokenView(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+# Fully OK
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
 
     def post(self, request):
+        try:
+            user = request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = LogoutSerializer(data=request.data)
         if serializer.is_valid():
             absolute_url = request.build_absolute_uri('/')
@@ -108,13 +124,64 @@ class LogoutView(APIView):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             return Response(status=result.status_code)
         else:
-            print(serializer.errors)
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class GetCategoriesView(ListAPIView):
+# Fully OK
+class ConfigsView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = CategorySerializer
+
+    def get(self, request):
+        try:
+            user = self.request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            isPersian = str(self.request.query_params.get('lang')) == "fa"
+        except:
+            isPersian = False
+        configs = Configs.objects.all().first()
+        serializer = ConfigsSerializer(configs, context={'request': request, 'isPersian': isPersian})
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+# Fully OK
+class CategoryListToggleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            user = request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = ToggleSetSerializer(data=request.data)
+        if serializer.is_valid():
+            toggleSet = serializer.validated_data['toggleSet']
+            for toggleItem in toggleSet:
+                if Category.objects.filter(id=toggleItem['id']).exists() is False:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+            for toggleItem in toggleSet:
+                category = Category.objects.get(id=toggleItem['id'])
+                newState = toggleItem['newState']
+                if newState:
+                    if (category in client.favoriteCategories.all()) is False:
+                        client.favoriteCategories.add(category)
+                else:
+                    if category in client.favoriteCategories.all():
+                        client.favoriteCategories.remove(category)
+            client.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# Fully OK
+class ArticleSearchView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ArticleCompactSerializer
 
     def get_serializer_context(self):
         try:
@@ -124,43 +191,11 @@ class GetCategoriesView(ListAPIView):
         return {'request': self.request, 'isPersian': isPersian}
 
     def get_queryset(self):
-        return Category.objects.all()
-
-
-class SubmitFavoriteCategoriesView(APIView):
-    def post(self, request):
-        serializer = IDSetSerializer(data=request.data)
-        if serializer.is_valid():
-            categoriesIdSet = serializer.validated_data['idSet']
-            for categoryId in categoriesIdSet:
-                if Category.objects.filter(id=categoryId['id']).exists() is False:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-            client = Client.objects.get(user=request.user)
-            for categoryId in categoriesIdSet:
-                category = Category.objects.get(id=categoryId['id'])
-                if category in client.favoriteCategories.all():
-                    client.favoriteCategories.remove(category)
-                else:
-                    client.favoriteCategories.add(category)
-            client.save()
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-class SearchArticlesView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ArticleLeadSerializer
-
-    def get_serializer_context(self):
-        return {'request': self.request}
-
-    def get_queryset(self):
         try:
             user = self.request.user
             client = user.client
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         try:
             query_text = self.request.query_params.get('query')
             if query_text is None:
@@ -171,6 +206,8 @@ class SearchArticlesView(ListAPIView):
             isPersian = str(self.request.query_params.get('lang')) == "fa"
         except:
             isPersian = False
+        if query_text == "":
+            return []
         articles = Article.objects.filter(
             Q(title__icontains=query_text) | Q(leadText__icontains=query_text),
             category__in=client.favoriteCategories.all(),
@@ -178,10 +215,77 @@ class SearchArticlesView(ListAPIView):
         return articles[:10]
 
 
-class GetArticleView(APIView):
-    permission_classes = [AllowAny]
+# Fully OK
+class ArticleBookmarkToggleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            user = request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = ToggleSerializer(data=request.data)
+        if serializer.is_valid():
+            articleId = serializer.validated_data['id']
+            newState = serializer.validated_data['newState']
+            if Article.objects.filter(id=articleId).exists() is False:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            article = Article.objects.get(id=articleId)
+            if newState:
+                if (article in client.bookmarkedArticles.all()) is False:
+                    client.bookmarkedArticles.add(article)
+            else:
+                if article in client.bookmarkedArticles.all():
+                    client.bookmarkedArticles.remove(article)
+            client.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# Fully OK
+class ArticleBookmarkListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ArticleCompactSerializer
+
+    def get_serializer_context(self):
+        try:
+            isPersian = str(self.request.query_params.get('lang')) == "fa"
+        except:
+            isPersian = False
+        return {'request': self.request, 'isPersian': isPersian}
+
+    def get_queryset(self):
+        try:
+            user = self.request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            query_text = self.request.query_params.get('query')
+            if query_text is None:
+                query_text = ""
+        except:
+            query_text = ""
+        try:
+            isPersian = str(self.request.query_params.get('lang')) == "fa"
+        except:
+            isPersian = False
+        articles = client.bookmarkedArticles.filter(isPersian=isPersian).order_by("-creationDate")
+        return articles
+
+
+# Fully OK
+class ArticleView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        try:
+            user = request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         try:
             articleId = self.request.query_params.get('id')
             article = Article.objects.get(id=articleId)
@@ -189,26 +293,3 @@ class GetArticleView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = ArticleSerializer(article, context={'request': request, 'isPersian': article.isPersian})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-
-class ToggleBookmarkArticleView(APIView):
-    def post(self, request):
-        try:
-            user = self.request.user
-            client = user.client
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = IDSerializer(data=request.data)
-        if serializer.is_valid():
-            articleId = serializer.validated_data['id']
-            if Article.objects.filter(id=articleId).exists() is False:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            article = Article.objects.get(id=articleId)
-            if article in client.bookmarkedArticles.all():
-                client.bookmarkedArticles.remove(article)
-            else:
-                client.bookmarkedArticles.add(article)
-            client.save()
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)

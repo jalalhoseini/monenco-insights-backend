@@ -5,11 +5,11 @@ from rest_framework.serializers import (
     IntegerField,
     SerializerMethodField,
     ModelSerializer,
-
+    BooleanField,
 )
 
 from API.validators import *
-from API.models import (Category, Article, ArticlePart, Author, Tag)
+from API.models import (Category, Article, ArticlePart, Author, Tag, Configs)
 
 
 class AuthenticationSerializer(Serializer):
@@ -38,12 +38,65 @@ class RefreshTokenSerializer(AuthenticationSerializer):
     grant_type = CharField(max_length=20)
 
 
-class IDSerializer(Serializer):
+class ConfigsSerializer(ModelSerializer):
+    monencoWebsite = SerializerMethodField()
+    monencoWebsiteTitle = SerializerMethodField()
+    minCategorySelectCount = SerializerMethodField()
+    categories = SerializerMethodField()
+    bannerArticles = SerializerMethodField()
+    newArticles = SerializerMethodField()
+    shareFooter = SerializerMethodField()
+
+    class Meta:
+        model = Configs
+        fields = [
+            'monencoWebsite',
+            'monencoWebsiteTitle',
+            'minCategorySelectCount',
+            'categories',
+            'bannerArticles',
+            'newArticles',
+            'shareFooter',
+        ]
+
+    def get_monencoWebsite(self, obj):
+        return obj.monencoWebsite
+
+    def get_monencoWebsiteTitle(self, obj):
+        if self.context['isPersian'] is False:
+            return obj.monencoWebsiteTitle
+        else:
+            return obj.persianMonencoWebsiteTitle
+
+    def get_minCategorySelectCount(self, obj):
+        return obj.minCategorySelectCount
+
+    def get_categories(self, obj):
+        categories = Category.objects.all()
+        return CategorySerializer(categories, many=True, context=self.context).data
+
+    def get_bannerArticles(self, obj):
+        articles = Article.objects.filter(isBanner=True, isPersian=self.context['isPersian']).order_by('-creationDate')
+        return ArticleCompactSerializer(articles, many=True, context=self.context).data
+
+    def get_new_Articles(self, obj):
+        articles = Article.objects.filter(isPersian=self.context['isPersian']).order_by('-creationDate')[:10]
+        return ArticleCompactSerializer(articles, many=True, context=self.context).data
+
+    def get_shareFooter(self, obj):
+        if self.context['isPersian'] is False:
+            return obj.shareFooter
+        else:
+            return obj.shareFooter
+
+
+class ToggleSerializer(Serializer):
     id = IntegerField()
+    newState = BooleanField()
 
 
-class IDSetSerializer(Serializer):
-    idSet = IDSerializer(many=True)
+class ToggleSetSerializer(Serializer):
+    toggleSet = ToggleSerializer(many=True)
 
 
 class CategorySerializer(ModelSerializer):
@@ -81,9 +134,11 @@ class CategorySerializer(ModelSerializer):
             return ""
 
 
-class ArticleLeadSerializer(ModelSerializer):
+class ArticleCompactSerializer(ModelSerializer):
     image = SerializerMethodField()
     isBookmarked = SerializerMethodField()
+    creationDate = SerializerMethodField()
+    tags = SerializerMethodField()
 
     class Meta:
         model = Article
@@ -93,6 +148,8 @@ class ArticleLeadSerializer(ModelSerializer):
             'leadText',
             'isBookmarked',
             'id',
+            'creationDate',
+            'tags',
         ]
 
     def get_image(self, obj):
@@ -107,6 +164,13 @@ class ArticleLeadSerializer(ModelSerializer):
     def get_isBookmarked(self, obj):
         request = self.context['request']
         return obj in request.user.client.bookmarkedArticles.all()
+
+    def get_creationDate(self, obj):
+        return obj.creationDate.date()
+
+    def get_tags(self, obj):
+        tags = obj.tags.all()
+        return TagSerializer(tags, many=True, context=self.context).data
 
 
 class ArticleSerializer(ModelSerializer):
