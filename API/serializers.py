@@ -79,7 +79,7 @@ class ConfigsSerializer(ModelSerializer):
         articles = Article.objects.filter(isBanner=True, isPersian=self.context['isPersian']).order_by('-creationDate')
         return ArticleCompactSerializer(articles, many=True, context=self.context).data
 
-    def get_new_Articles(self, obj):
+    def get_newArticles(self, obj):
         articles = Article.objects.filter(isPersian=self.context['isPersian']).order_by('-creationDate')[:10]
         return ArticleCompactSerializer(articles, many=True, context=self.context).data
 
