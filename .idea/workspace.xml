@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7bdb3318-6627-4b93-a949-708cf68f326d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonencoInsights/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/MonencoInsights/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,26 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/API/serializers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="81" column="17" selection-start-line="81" selection-start-column="17" selection-end-line="81" selection-end-column="17" />
-              <folding>
-                <element signature="e#0#156#0" expanded="true" />
-                <element signature="e#306#425#0" />
-                <element signature="e#488#622#0" />
-                <element signature="e#678#829#0" />
-                <element signature="e#886#919#0" />
-                <element signature="e#982#1065#0" />
-                <element signature="e#1104#1153#0" />
-                <element signature="e#1165#1196#0" />
-                <element signature="e#1246#2081#0" />
-                <element signature="e#2134#3130#0" />
-                <element signature="e#4942#5389#0" />
-                <element signature="e#5434#5725#0" />
-                <element signature="e#5773#6079#0" />
-              </folding>
+            <state relative-caret-position="285">
+              <caret line="86" column="46" selection-start-line="86" selection-start-column="46" selection-end-line="86" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -47,15 +26,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/API/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
+            <state relative-caret-position="2074">
               <caret line="145" column="31" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
-                <element signature="e#729#2361#0" />
-                <element signature="e#2429#3234#0" />
-                <element signature="e#3274#4091#0" />
-                <element signature="e#4125#4767#0" />
-                <element signature="e#9068#10027#0" />
               </folding>
             </state>
           </provider>
@@ -64,7 +38,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/API/admin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
+            <state relative-caret-position="136">
               <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
@@ -76,8 +50,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MonencoInsights/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="23" column="34" lean-forward="true" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
+            <state relative-caret-position="323">
+              <caret line="23" column="34" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
               <folding>
                 <element signature="e#639#680#0" expanded="true" />
               </folding>
@@ -88,8 +62,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/API/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="12" />
+            <state relative-caret-position="170">
+              <caret line="76" selection-start-line="76" selection-end-line="76" />
               <folding>
                 <element signature="e#0#206#0" expanded="true" />
               </folding>
@@ -97,10 +71,19 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/API/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
+            <state relative-caret-position="136">
               <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
@@ -112,7 +95,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MonencoInsights/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="191">
+            <state relative-caret-position="272">
               <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
@@ -151,13 +134,13 @@
         <option value="$PROJECT_DIR$/API/validators.py" />
         <option value="$PROJECT_DIR$/MonencoInsights/urls.py" />
         <option value="$PROJECT_DIR$/API/paginations.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/API/urls.py" />
         <option value="$PROJECT_DIR$/API/admin.py" />
-        <option value="$PROJECT_DIR$/API/models.py" />
         <option value="$PROJECT_DIR$/API/views.py" />
         <option value="$PROJECT_DIR$/MonencoInsights/views.py" />
         <option value="$PROJECT_DIR$/API/serializers.py" />
+        <option value="$PROJECT_DIR$/API/models.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -172,6 +155,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -193,7 +177,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -263,17 +246,34 @@
       <workItem from="1549660911922" duration="8637000" />
       <workItem from="1549710511712" duration="1699000" />
       <workItem from="1549749861251" duration="3408000" />
-      <workItem from="1549895390386" duration="19660000" />
+      <workItem from="1549895390386" duration="21467000" />
+      <workItem from="1550061401186" duration="59000" />
     </task>
+    <task id="LOCAL-00001" summary="banner and new posts added">
+      <created>1549995151584</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1549995151587</updated>
+    </task>
+    <task id="LOCAL-00002" summary="new articles fixed">
+      <created>1549997892990</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1549997892991</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58559000" />
+    <option name="totallyTimeSpent" value="60425000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49468893" visible="true" weight="0.39863843" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49468893" visible="true" weight="0.40468988" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.5053111" side_tool="true" weight="0.15262516" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -283,10 +283,10 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32959184" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.504884" side_tool="true" weight="0.29387754" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50378215" side_tool="true" visible="true" weight="0.32993197" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32959184" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.21734694" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32993197" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49621785" visible="true" weight="0.32993197" />
       <window_info anchor="bottom" id="manage.py@Food_Framework" order="11" sideWeight="0.495116" visible="true" weight="0.29387754" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
@@ -323,6 +323,11 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="banner and new posts added" />
+    <MESSAGE value="new articles fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="new articles fixed" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/MonencoInsights/hosts.py">
@@ -367,13 +372,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -381,19 +379,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/API/urls.py">
+    <entry file="file://$PROJECT_DIR$/API/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+        <state relative-caret-position="285">
+          <caret line="86" column="46" selection-start-line="86" selection-start-column="46" selection-end-line="86" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/API/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2074">
+          <caret line="145" column="31" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/API/admin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
+        <state relative-caret-position="136">
           <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
@@ -401,29 +406,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/API/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#206#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MonencoInsights/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="23" column="34" lean-forward="true" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
+        <state relative-caret-position="323">
+          <caret line="23" column="34" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
           <folding>
             <element signature="e#639#680#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/API/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/MonencoInsights/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
+        <state relative-caret-position="272">
           <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
@@ -431,40 +436,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/API/views.py">
+    <entry file="file://$PROJECT_DIR$/API/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="145" column="31" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
+        <state relative-caret-position="170">
+          <caret line="76" selection-start-line="76" selection-end-line="76" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
-            <element signature="e#729#2361#0" />
-            <element signature="e#2429#3234#0" />
-            <element signature="e#3274#4091#0" />
-            <element signature="e#4125#4767#0" />
-            <element signature="e#9068#10027#0" />
+            <element signature="e#0#206#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/API/serializers.py">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="81" column="17" selection-start-line="81" selection-start-column="17" selection-end-line="81" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#156#0" expanded="true" />
-            <element signature="e#306#425#0" />
-            <element signature="e#488#622#0" />
-            <element signature="e#678#829#0" />
-            <element signature="e#886#919#0" />
-            <element signature="e#982#1065#0" />
-            <element signature="e#1104#1153#0" />
-            <element signature="e#1165#1196#0" />
-            <element signature="e#1246#2081#0" />
-            <element signature="e#2134#3130#0" />
-            <element signature="e#4942#5389#0" />
-            <element signature="e#5434#5725#0" />
-            <element signature="e#5773#6079#0" />
-          </folding>
+        <state relative-caret-position="34">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>

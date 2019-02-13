@@ -72,6 +72,9 @@ class Article(Model):
                            db_index=True)
     isBanner = BooleanField(default=False)
 
+    def __str__(self):
+        return self.title
+
 
 class ArticlePart(Model):
     def uploadLocation(self, filename):
@@ -84,6 +87,9 @@ class ArticlePart(Model):
     image = ImageField(upload_to=uploadLocation, null=True, blank=True, default=None)
     content = RichTextField(null=True, blank=True, default=None)
     article = ForeignKey(to="Article", on_delete=CASCADE, db_index=True)
+
+    def __str__(self):
+        return self.title
 
 
 class Configs(Model):
