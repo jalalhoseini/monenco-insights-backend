@@ -182,6 +182,9 @@ class ArticleSerializer(ModelSerializer):
     tags = SerializerMethodField()
     isBookmarked = SerializerMethodField()
     relatedArticles = SerializerMethodField()
+    purchasable = SerializerMethodField()
+    purchased = SerializerMethodField()
+    price = SerializerMethodField()
 
     class Meta:
         model = Article
@@ -197,11 +200,17 @@ class ArticleSerializer(ModelSerializer):
             'tags',
             'isBookmarked',
             'relatedArticles',
+            'purchasable',
+            'purchased',
+            'price',
         ]
 
     def get_parts(self, obj):
-        parts = ArticlePart.objects.filter(article=obj).order_by('order')
-        return ArticlePartSerializer(parts, many=True, context=self.context).data
+        client = self.context['request'].user.client
+        if obj.price == 0 or obj in client.purchasedArticles.all():
+            parts = ArticlePart.objects.filter(article=obj).order_by('order')
+            return ArticlePartSerializer(parts, many=True, context=self.context).data
+        return None
 
     def get_image(self, obj):
         try:
@@ -231,6 +240,16 @@ class ArticleSerializer(ModelSerializer):
 
     def get_relatedArticles(self, obj):
         return ""
+
+    def get_purchasable(self, obj):
+        return obj.price > 0
+
+    def get_purchased(self, obj):
+        client = self.context['request'].user.client
+        return obj in client.purchasedArticles.all()
+
+    def get_price(self, obj):
+        return obj.price
 
 
 class ArticlePartSerializer(ModelSerializer):
@@ -284,6 +303,11 @@ class AuthorSerializer(ModelSerializer):
     def get_name(self, obj):
         isPersian = self.context['isPersian']
         if isPersian:
-            return obj.persianPublicName
+            return obj.publicPersianName
         else:
             return obj.publicName
+
+
+class PurchaseArticleSerializer(Serializer):
+    articleID = IntegerField(required=True)
+    platform = CharField(required=True)

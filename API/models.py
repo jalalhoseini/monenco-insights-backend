@@ -19,8 +19,9 @@ PART_TYPE_CHOICES = (
 class Client(Model):
     user = OneToOneField(to=User, on_delete=CASCADE, null=False, db_index=True)
     author = OneToOneField(to="Author", on_delete=SET_NULL, null=True, default=None, db_index=True)
-    bookmarkedArticles = ManyToManyField(to="Article", db_index=True)
+    bookmarkedArticles = ManyToManyField(to="Article", db_index=True, blank=True, related_name="bookmarkers")
     favoriteCategories = ManyToManyField(to="Category", db_index=True)
+    purchasedArticles = ManyToManyField(to="Article", db_index=True, blank=True, related_name="purchasers")
 
     def __str__(self):
         return self.user.username
@@ -71,6 +72,7 @@ class Article(Model):
     tags = ManyToManyField(to="Tag", related_name="articles", related_query_name="article", blank=True,
                            db_index=True)
     isBanner = BooleanField(default=False)
+    price = IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -99,3 +101,10 @@ class Configs(Model):
     minCategorySelectCount = IntegerField()
     shareFooter = TextField(default=None, blank=True, null=True)
     persianShareFooter = TextField(default=None, blank=True, null=True)
+
+
+class PurchaseBankID(Model):
+    client = ForeignKey(to="Client", db_index=True)
+    article = ForeignKey(to="Article", db_index=True)
+    authorityID = CharField(max_length=200, null=False, blank=False)
+    platform = CharField(max_length=100,null=False,blank=False)

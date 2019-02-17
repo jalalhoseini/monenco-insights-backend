@@ -10,6 +10,8 @@ from API.views import (
     ArticleBookmarkToggleView,
     ArticleBookmarkListView,
     ArticleView,
+    PurchaseCallbackView,
+    ArticlePurchaseView,
 )
 
 urlpatterns = [
@@ -25,5 +27,7 @@ urlpatterns = [
     url(r'^article/search/', ArticleSearchView.as_view()),
     url(r'^article/bookmark/toggle/', ArticleBookmarkToggleView.as_view()),
     url(r'^article/bookmark/list/', ArticleBookmarkListView.as_view()),
+    url(r'^article/purchase/callback/', PurchaseCallbackView.as_view()),
+    url(r'^article/purchase/', ArticlePurchaseView.as_view()),
     url(r'^article/', ArticleView.as_view()),
 ]

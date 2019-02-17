@@ -1,9 +1,11 @@
 import requests
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
 )
+from suds import client as C1
 from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope
 
 from rest_framework.generics import ListAPIView
@@ -19,9 +21,13 @@ from API.serializers import (UserRegisterSerializer,
                              ArticleCompactSerializer,
                              ArticleSerializer,
                              ToggleSerializer,
+                             PurchaseArticleSerializer,
                              )
 from django.contrib.auth.models import User
-from API.models import (Client, Category, Article, Configs)
+from API.models import (Client, Category, Article, Configs, PurchaseBankID)
+
+MMERCHANT_ID = '2f61cc7c-a3fe-11e6-8bd7-005056a205be'
+ZARINPAL_WEBSERVICE = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
 
 
 # Fully OK
@@ -293,3 +299,99 @@ class ArticleView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = ArticleSerializer(article, context={'request': request, 'isPersian': article.isPersian})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+class ArticlePurchaseView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            user = request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = PurchaseArticleSerializer(data=request.data)
+        if serializer.is_valid():
+            articleId = serializer.validated_data["articleID"]
+            platform = str(serializer.validated_data["platform"])
+            if Article.objects.filter(id=articleId).exists() is False:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            if platform != "Android" and platform != "iOS":
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            article = Article.objects.get(id=articleId)
+            if article in client.purchasedArticles.all():
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            if article.price == 0:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            if PurchaseBankID.objects.filter(article=article, client=client).exists():
+                PurchaseBankID.objects.filter(article=article, client=client).delete()
+            price = article.price
+            if article.isPersian:
+                description = "خرید مقاله: " + article.title
+            else:
+                description = "Purchasing Article: " + article.title
+            zarin_client = C1.Client(ZARINPAL_WEBSERVICE)
+            absolute_url = request.build_absolute_uri('/')
+            call_back_url = absolute_url + 'api/v1/article/purchase/callback/'
+            result = zarin_client.service.PaymentRequest(
+                MerchantID=MMERCHANT_ID,
+                Amount=price,
+                Description=description,
+                CallbackURL=call_back_url,
+            )
+            if result.Status == 100:
+                authorizationID = str(result.Authority)
+                PurchaseBankID.objects.create(article=article, client=client, authorityID=authorizationID,
+                                              platform=platform)
+                zarin_url = 'https://www.zarinpal.com/pg/StartPay/' + authorizationID
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            result['url'] = zarin_url
+            return Response(result, status=status.HTTP_200_OK)
+
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class PurchaseCallbackView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        zarin_client = C1.Client(ZARINPAL_WEBSERVICE)
+        zarin_status = request.query_params.get('Status', None)
+        authorizationID = str(request.query_params.get('Authority', None))
+        if PurchaseBankID.objects.filter(authorityID=authorizationID).exists() is False:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        bankID = PurchaseBankID.objects.get(authorityID=authorizationID)
+        if zarin_status == 'OK':
+            result = zarin_client.service.PaymentVerification(
+                MerchantID=MMERCHANT_ID,
+                Authority=authorizationID,
+                Amount=bankID.article.price,
+            )
+            platform = bankID.platform
+            article = bankID.article
+            if result.Status == 100:
+                client = bankID.client
+                article = bankID.article
+                client.purchasedArticles.add(article)
+                client.save()
+                bankID.delete()
+                if platform == 'iOS':
+                    app_url = 'monencoinsights://?status=1&article=' + str(article.id)
+                else:
+                    app_url = "intent://monencoinsights.com#Intent;scheme=monenco;package=com.monenco.insights;i.status=1;S.article={};end".format(
+                        str(article.id))
+                response = HttpResponse("", status=302)
+                response['Location'] = app_url
+                return response
+            else:
+                if platform == 'iOS':
+                    app_url = 'monencoinsights://?status=0&article=' + str(article.id)
+                else:
+                    app_url = "intent://monencoinsights.com#Intent;scheme=monenco;package=com.monenco.insights;i.status=0;S.article={};end".format(
+                        str(article.id))
+                response = HttpResponse("", status=302)
+                response['Location'] = app_url
+                return response

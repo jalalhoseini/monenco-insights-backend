@@ -43,3 +43,4 @@ Sphinx==1.6.3
 sphinxcontrib-websupport==1.0.1
 suds-jurko==0.6
 urllib3==1.22
+zeep
