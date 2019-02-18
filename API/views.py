@@ -392,7 +392,7 @@ class PurchaseCallbackView(APIView):
         if platform == 'iOS':
             app_url = 'monencoinsights://?status=0&article=' + str(article.id)
         else:
-            app_url = "intent://monencoinsights.com/#Intent;scheme=monenco;package=com.monenco.insights;i.status=0;i.article={};end".format(
+            app_url = "intent://www.monencoinsights.com/#Intent;scheme=monenco;package=com.monenco.insights;i.status=0;i.article={};end".format(
                 str(article.id))
         response = HttpResponse("", status=302)
         response['Location'] = app_url
