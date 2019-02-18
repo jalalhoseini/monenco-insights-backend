@@ -358,20 +358,20 @@ class PurchaseCallbackView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        zarin_client = C1.Client(ZARINPAL_WEBSERVICE)
         zarin_status = request.query_params.get('Status', None)
         authorizationID = str(request.query_params.get('Authority', None))
         if PurchaseBankID.objects.filter(authorityID=authorizationID).exists() is False:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         bankID = PurchaseBankID.objects.get(authorityID=authorizationID)
+        platform = bankID.platform
+        article = bankID.article
         if zarin_status == 'OK':
+            zarin_client = C1.Client(ZARINPAL_WEBSERVICE)
             result = zarin_client.service.PaymentVerification(
                 MerchantID=MMERCHANT_ID,
                 Authority=authorizationID,
                 Amount=bankID.article.price,
             )
-            platform = bankID.platform
-            article = bankID.article
             if result.Status == 100:
                 client = bankID.client
                 article = bankID.article
@@ -389,15 +389,14 @@ class PurchaseCallbackView(APIView):
                 response = HttpResponse("", status=302)
                 response['Location'] = app_url
                 return response
-            else:
-                if platform == 'iOS':
-                    app_url = 'monencoinsights://?status=0&article=' + str(article.id)
-                else:
-                    app_url = "intent://monencoinsights.com/#Intent;scheme=monenco;package=com.monenco.insights;i.status=0;i.article={};end".format(
-                        str(article.id))
-                response = HttpResponse("", status=302)
-                response['Location'] = app_url
-                return response
+        if platform == 'iOS':
+            app_url = 'monencoinsights://?status=0&article=' + str(article.id)
+        else:
+            app_url = "intent://monencoinsights.com/#Intent;scheme=monenco;package=com.monenco.insights;i.status=0;i.article={};end".format(
+                str(article.id))
+        response = HttpResponse("", status=302)
+        response['Location'] = app_url
+        return response
 
 
 class PurchaseListView(ListAPIView):
