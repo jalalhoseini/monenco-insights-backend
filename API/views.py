@@ -378,11 +378,14 @@ class PurchaseCallbackView(APIView):
                 client.purchasedArticles.add(article)
                 client.save()
                 bankID.delete()
+                platform = "Android"
+                article = Article.objects.get(id=1)
                 if platform == 'iOS':
                     app_url = 'monencoinsights://?status=1&article=' + str(article.id)
                 else:
-                    app_url = "intent://monencoinsights.com#Intent;scheme=monenco;package=com.monenco.insights;i.status=1;S.article={};end".format(
+                    app_url = "intent://www.monencoinsights.com/#Intent;scheme=monenco;package=com.monenco.insights;i.status=1;i.article={};end".format(
                         str(article.id))
+                print(app_url)
                 response = HttpResponse("", status=302)
                 response['Location'] = app_url
                 return response
@@ -390,8 +393,39 @@ class PurchaseCallbackView(APIView):
                 if platform == 'iOS':
                     app_url = 'monencoinsights://?status=0&article=' + str(article.id)
                 else:
-                    app_url = "intent://monencoinsights.com#Intent;scheme=monenco;package=com.monenco.insights;i.status=0;S.article={};end".format(
+                    app_url = "intent://monencoinsights.com/#Intent;scheme=monenco;package=com.monenco.insights;i.status=0;i.article={};end".format(
                         str(article.id))
                 response = HttpResponse("", status=302)
                 response['Location'] = app_url
                 return response
+
+
+class PurchaseListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ArticleCompactSerializer
+
+    def get_serializer_context(self):
+        try:
+            isPersian = str(self.request.query_params.get('lang')) == "fa"
+        except:
+            isPersian = False
+        return {'request': self.request, 'isPersian': isPersian}
+
+    def get_queryset(self):
+        try:
+            user = self.request.user
+            client = user.client
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            query_text = self.request.query_params.get('query')
+            if query_text is None:
+                query_text = ""
+        except:
+            query_text = ""
+        try:
+            isPersian = str(self.request.query_params.get('lang')) == "fa"
+        except:
+            isPersian = False
+        articles = client.purchasedArticles.filter(isPersian=isPersian).order_by("-creationDate")
+        return articles
