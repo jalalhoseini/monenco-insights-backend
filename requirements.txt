@@ -31,7 +31,7 @@ Pillow==4.2.1
 psycopg2==2.7.3
 pycountry==17.5.14
 pyfcm==1.2.3
-Pygments==2.2.0
+Pygments==2.7.4
 python-bidi==0.4.0
 pytz==2016.10
 redis==2.10.5
