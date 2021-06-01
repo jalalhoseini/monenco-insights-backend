@@ -42,5 +42,5 @@ snowballstemmer==1.2.1
 Sphinx==1.6.3
 sphinxcontrib-websupport==1.0.1
 suds-jurko==0.6
-urllib3==1.22
+urllib3==1.26.5
 zeep
